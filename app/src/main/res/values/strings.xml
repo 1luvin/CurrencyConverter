@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">Currency Converter</string>
+
+    <string name="Converter">Converter</string>
+    <string name="Done">Done</string>
+
+    <!--  Currencies  -->
+
+    <string name="AddCurrencies">Add currencies</string>
+    <string name="SelectCurrencies">Select currencies</string>
+    <string name="SelectCurrenciesHint">(2 or more)</string>
+
+    <string name="currency_usd">United States Dollar</string>
+    <string name="currency_eur">Euro</string>
+    <string name="currency_gbp">British Pound</string>
+    <string name="currency_jpy">Japanese Yen</string>
+    <string name="currency_inr">Indian Rupee</string>
+    <string name="currency_chf">Swiss Franc</string>
+    <string name="currency_rub">Russian Ruble</string>
+    <string name="currency_cny">Chinese Yuan</string>
+    <string name="currency_pln">Polish Zloty</string>
+    <string name="currency_idr">Indonesian Rupiah</string>
+    <string name="currency_krw">South Korean Won</string>
+    <string name="currency_ils">Israeli Shekel</string>
+    <string name="currency_uah">Ukrainian Hryvnia</string>
+    <string name="currency_byn">Belarusian Ruble</string>
+
+    <!--  States  -->
+
+    <string name="state_WaitingForNetwork">Waiting for network</string>
+    <string name="state_UpdatingRates">Updating rates</string>
+    <string name="state_RatesUpdated">Rates updated</string>
+</resources>
