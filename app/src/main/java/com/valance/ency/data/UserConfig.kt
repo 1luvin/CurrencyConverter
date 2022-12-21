@@ -6,10 +6,12 @@ import com.valance.ency.ui.main.MainActivity
 
 object UserConfig {
 
-    private val context: Context get() = MainActivity.instance.applicationContext
+    private val context: Context get() = MainActivity.getInstance().applicationContext
 
-    private val CURRENCIES: String get() = "CURRENCIES"
-    private val SEPARATOR: String get() = "|"
+    private const val CURRENCIES: String = "CURRENCIES"
+    private const val SEPARATOR: String = "|"
+
+    private const val THEME: String = "THEME"
 
     private val prefs: SharedPreferences =
         context.getSharedPreferences(
@@ -17,7 +19,7 @@ object UserConfig {
             Context.MODE_PRIVATE
         )
 
-    val currencies: List<Currency>
+    var currencies: List<Currency>
         get() {
             val saved = prefs.getString(CURRENCIES, "")!!
             return if (saved.isEmpty()) {
@@ -26,20 +28,21 @@ object UserConfig {
                 saved.split(SEPARATOR).map { Currency.valueOf(it) }
             }
         }
-
-    fun setCurrencies(currencies: List<Currency>) {
-        prefs.edit().putString(CURRENCIES, currencies.joinToString(SEPARATOR)).apply()
-    }
+        set(value) = prefs.edit().putString(CURRENCIES, value.joinToString(SEPARATOR)).apply()
 
     fun addCurrencies(currencies: List<Currency>) {
-        setCurrencies(this.currencies + currencies)
+        this.currencies += currencies
     }
 
     fun removeCurrency(currency: Currency) {
-        setCurrencies(currencies - currency)
+        this.currencies -= currency
     }
 
     fun clearCurrencies() {
-        setCurrencies(listOf())
+        this.currencies = listOf()
     }
+
+    var theme: Theme
+        get() = Theme.valueOf(prefs.getString(THEME, Theme.System.name)!!)
+        set(value) = prefs.edit().putString(THEME, value.name).apply()
 }

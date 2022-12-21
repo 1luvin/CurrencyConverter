@@ -10,7 +10,7 @@ object Font {
     private fun font(style: String): Typeface {
         if (!fonts.containsKey(style)) {
             fonts[style] = Typeface.createFromAsset(
-                MainActivity.instance.assets, "font/montserrat_$style.ttf"
+                MainActivity.getInstance().assets, "font/montserrat_$style.ttf"
             )
         }
 

@@ -10,7 +10,7 @@ class AddCurrenciesFragment(context: Context) : BaseCurrenciesFragment(context) 
     override val actionBar: ActionBar
         get() = ActionBar(
             context,
-            title = Resource.string(R.string.AddCurrencies),
+            title = Resource.string(R.string.SelectCurrencies),
             onBack = {
                 finish()
             }

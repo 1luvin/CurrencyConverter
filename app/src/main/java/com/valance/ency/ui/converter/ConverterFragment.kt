@@ -13,8 +13,9 @@ import com.valance.ency.extension.dp
 import com.valance.ency.ui.base.BaseFragment
 import com.valance.ency.ui.currencies.AddCurrenciesFragment
 import com.valance.ency.ui.currencies.SelectCurrenciesFragment
-import com.valance.ency.ui.custom.button.StateButton
 import com.valance.ency.ui.custom.actionbar.ActionBar
+import com.valance.ency.ui.custom.button.StateButton
+import com.valance.ency.ui.custom.dialog.ThemeDialog
 import com.valance.ency.ui.main.MainActivity
 import com.valance.ency.util.Layout
 import com.valance.ency.util.NetworkUtil
@@ -30,6 +31,7 @@ class ConverterFragment(context: Context) : BaseFragment(context) {
     private lateinit var addCurrencyButton: StateButton
 
     private var ratesJob: Job? = null
+    private var themeDialog: ThemeDialog? = null
 
     /*
         Fragment
@@ -51,7 +53,11 @@ class ConverterFragment(context: Context) : BaseFragment(context) {
         actionBar = ActionBar(
             context,
             title = Resource.string(R.string.Converter)
-        )
+        ).apply {
+            setActionButton(R.drawable.theme) {
+                showThemeDialog()
+            }
+        }
 
         currencyRecyclerView = RecyclerView(context).apply {
             overScrollMode = View.OVER_SCROLL_NEVER
@@ -117,7 +123,8 @@ class ConverterFragment(context: Context) : BaseFragment(context) {
      */
 
     private fun updateRates() {
-        val neededCurrencies = UserConfig.currencies.filter { it != Currency.USD && it.rateToUSD == 1f }
+        val neededCurrencies =
+            UserConfig.currencies.filter { it != Currency.USD && it.rateToUSD == 1f }
         if (neededCurrencies.isEmpty()) {
             actionBar.setState(ActionBar.State.RATES_UPDATED, animated = false)
             currencyAdapter.setCurrencies(UserConfig.currencies)
@@ -127,7 +134,7 @@ class ConverterFragment(context: Context) : BaseFragment(context) {
 
         actionBar.setState(ActionBar.State.UPDATING_RATES, animated = false)
         addCurrencyButton.setState(false, animated = false)
-        ratesJob = MainActivity.instance.lifecycleScope.launch(Dispatchers.IO) {
+        ratesJob = MainActivity.getInstance().lifecycleScope.launch(Dispatchers.IO) {
             while (true) {
                 if (NetworkUtil.isConnected) {
                     Currency.collectRates(
@@ -147,6 +154,18 @@ class ConverterFragment(context: Context) : BaseFragment(context) {
                 }
                 delay(50)
             }
+        }
+    }
+
+    private fun showThemeDialog() {
+        if (themeDialog != null) return
+
+        themeDialog = ThemeDialog(context).apply {
+            setOnDismissListener {
+                themeDialog = null
+            }
+        }.also {
+            it.show()
         }
     }
 }

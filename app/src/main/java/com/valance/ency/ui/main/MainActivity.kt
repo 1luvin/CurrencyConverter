@@ -13,11 +13,12 @@ import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.Volley
+import com.valance.ency.data.Theme
 import com.valance.ency.data.UserConfig
 import com.valance.ency.ui.base.BaseFragment
 import com.valance.ency.ui.converter.ConverterFragment
 import com.valance.ency.ui.currencies.SelectCurrenciesFragment
-import com.valance.ency.util.Theme
+import com.valance.ency.util.ThemeUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
@@ -29,7 +30,7 @@ class MainActivity : AppCompatActivity() {
     companion object {
         @SuppressLint("StaticFieldLeak")
         private var Instance: MainActivity? = null
-        val instance: MainActivity get() = Instance!!
+        fun getInstance(): MainActivity = Instance!!
     }
 
     val requestQueue: RequestQueue by lazy { Volley.newRequestQueue(this) }
@@ -80,9 +81,12 @@ class MainActivity : AppCompatActivity() {
      */
 
     private fun createView(): View {
-        fragmentFrame = FrameLayout(this).apply {
-            setBackgroundColor(Theme.color(Theme.color_bg))
+        fragmentFrame = FrameLayout(this)
+
+        ThemeUtil.colors.observe(this) {
+            fragmentFrame.setBackgroundColor(ThemeUtil.color(ThemeUtil.color_bg))
         }
+
         return fragmentFrame
     }
 

@@ -21,14 +21,14 @@ var TextView.textSizeDp: Float
 
 fun EditText.showKeyboard() {
     post {
-        WindowCompat.getInsetsController(MainActivity.instance.window, this)
+        WindowCompat.getInsetsController(MainActivity.getInstance().window, this)
             .show(WindowInsetsCompat.Type.ime())
     }
 }
 
 fun EditText.hideKeyboard() {
     post {
-        WindowCompat.getInsetsController(MainActivity.instance.window, this)
+        WindowCompat.getInsetsController(MainActivity.getInstance().window, this)
             .hide(WindowInsetsCompat.Type.ime())
     }
 }

@@ -19,10 +19,10 @@ abstract class BaseFragment(protected val context: Context) {
     fun destroyView() { view = null }
 
     protected fun pushFragment(fragment: BaseFragment) {
-        MainActivity.instance.pushFragment(fragment)
+        MainActivity.getInstance().pushFragment(fragment)
     }
     open fun finish() {
-        MainActivity.instance.popFragment()
+        MainActivity.getInstance().popFragment()
     }
 
     open fun onResume() {}

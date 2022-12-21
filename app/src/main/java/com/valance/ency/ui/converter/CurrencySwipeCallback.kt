@@ -11,7 +11,7 @@ import com.valance.ency.ui.custom.cell.CurrencyInputCell
 import com.valance.ency.ui.main.MainActivity
 import com.valance.ency.util.ColorUtil
 import com.valance.ency.util.Resource
-import com.valance.ency.util.Theme
+import com.valance.ency.util.ThemeUtil
 
 class CurrencySwipeCallback(
     private val adapter: CurrencyAdapter,
@@ -21,7 +21,7 @@ class CurrencySwipeCallback(
     ItemTouchHelper.RIGHT
 ) {
 
-    private val colorNegative: Int = Theme.color(Theme.color_negative)
+    private val colorNegative: Int = ThemeUtil.color(ThemeUtil.color_negative)
     private var swipeColor: Int = colorNegative
 
     private val swipeDrawable: Drawable = Resource.drawable(R.drawable.close)
@@ -91,7 +91,7 @@ class CurrencySwipeCallback(
             wasSwiped = dX > right * getSwipeThreshold(holder)
             if (wasSwiped != wasVibrated) {
                 wasVibrated = !wasVibrated
-                MainActivity.instance.vibrate()
+                MainActivity.getInstance().vibrate()
             }
 
             if ((dX == 0f) == needChangeAppearance) {

@@ -3,6 +3,7 @@ package com.valance.ency.ui.custom.cell
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.Canvas
 import android.text.TextUtils
 import android.view.Gravity
@@ -36,10 +37,10 @@ class CurrencyCell(
     private val textView2: TextView
     private val checkView: ImageView
 
-    private val indentDp: Int = 20
+    private val imageIndentDp: Int = 17
     private val imageSizeDp: Int = 40
-    private val imageTextIndentDp: Int = 5
     private val checkSizeDp: Int = 30
+    private val textRightIndentDp: Int = 20
 
     var isChecked: Boolean = false
         private set
@@ -47,6 +48,7 @@ class CurrencyCell(
 
     init {
         setWillNotDraw(!needDivider)
+        setPadding(imageIndentDp.dp, 0, 0, 0)
 
         setOnClickListener {
             setChecked(checked = !isChecked)
@@ -60,13 +62,12 @@ class CurrencyCell(
         addView(
             imageView, Layout.ezFrame(
                 imageSizeDp, imageSizeDp,
-                Gravity.CENTER_VERTICAL,
-                indentDp, 0, 0, 0
+                Gravity.CENTER_VERTICAL
             )
         )
 
         textView = TextView(context).apply {
-            setTextColor(Theme.color(Theme.color_text))
+            setTextColor(ThemeUtil.color(ThemeUtil.color_text))
             textSizeDp = 18f
             typeface = Font.Medium
             isSingleLine = true
@@ -78,12 +79,12 @@ class CurrencyCell(
         addView(
             textView, Layout.ezFrame(
                 Layout.MATCH_PARENT, Layout.MATCH_PARENT,
-                indentDp + imageSizeDp + imageTextIndentDp, 0, 0, 0
+                imageSizeDp + imageIndentDp, 0, 0, 0
             )
         )
 
         textView2 = TextView(context).apply {
-            setTextColor(Theme.color(Theme.color_text2))
+            setTextColor(ThemeUtil.color(ThemeUtil.color_text2))
             textSizeDp = 18f
             typeface = Font.Normal
             isSingleLine = true
@@ -96,16 +97,14 @@ class CurrencyCell(
             textView2, Layout.ezFrame(
                 Layout.WRAP_CONTENT, Layout.MATCH_PARENT,
                 Gravity.END,
-                0, 0, indentDp, 0
+                0, 0, textRightIndentDp, 0
             )
         )
 
-        val d = Resource.drawable(R.drawable.done).apply {
-            setTint(Theme.color(Theme.color_positive))
-        }
         checkView = ImageView(context).apply {
             scaleType = ImageView.ScaleType.FIT_CENTER
-            setImageDrawable(d)
+            setImageResource(R.drawable.done)
+            imageTintList = ColorStateList.valueOf(ThemeUtil.color(ThemeUtil.color_positive))
 
             alpha = 0f
             translationX = checkSizeDp.dp.toFloat()
@@ -114,7 +113,7 @@ class CurrencyCell(
             checkView, Layout.ezFrame(
                 checkSizeDp, checkSizeDp,
                 Gravity.END or Gravity.CENTER_VERTICAL,
-                0, 0, indentDp, 0
+                0, 0, 16, 0
             )
         )
     }
@@ -122,7 +121,7 @@ class CurrencyCell(
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(
             MeasureSpec.makeMeasureSpec(MeasureSpec.getSize(widthMeasureSpec), MeasureSpec.EXACTLY),
-            MeasureSpec.makeMeasureSpec(60.dp, MeasureSpec.EXACTLY)
+            MeasureSpec.makeMeasureSpec((60 + if (needDivider) 1 else 0).dp, MeasureSpec.EXACTLY)
         )
 
         textView2.measure(
@@ -131,25 +130,17 @@ class CurrencyCell(
         )
 
         val w =
-            measuredWidth - (textView.marginLeft + 10.dp + textView2.measuredWidth + textView2.marginEnd)
+            measuredWidth - (paddingLeft + textView.marginLeft + 15.dp + textView2.measuredWidth + textRightIndentDp.dp)
         textView.measure(
             MeasureSpec.makeMeasureSpec(w, MeasureSpec.EXACTLY),
             MeasureSpec.makeMeasureSpec(measuredHeight, MeasureSpec.EXACTLY)
         )
     }
 
-    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
-        super.onLayout(changed, left, top, right, bottom)
-
-        val l = textView.marginLeft
-        val t = 0
-        textView.layout(l, t, l + textView.measuredWidth, t + textView.measuredHeight)
-    }
-
     override fun onDraw(canvas: Canvas) {
         if (needDivider) {
             canvas.drawLine(
-                indentDp.dp.toFloat() + imageSizeDp.dp + imageTextIndentDp.dp,
+                textView.left.toFloat(),
                 height.toFloat(),
                 width.toFloat(),
                 height.toFloat(),

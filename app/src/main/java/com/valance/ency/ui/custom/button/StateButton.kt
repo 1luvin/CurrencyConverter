@@ -24,11 +24,11 @@ class StateButton(
 
     init {
         background = DrawableUtil.rect(
-            color = Theme.color(Theme.color_bg2),
+            color = ThemeUtil.color(ThemeUtil.color_bg2),
             corner = Float.MAX_VALUE
         )
 
-        setTextColor(Theme.color(Theme.color_text2))
+        setTextColor(ThemeUtil.color(ThemeUtil.color_text2))
         textSizeDp = 18f
         typeface = Font.Bold
         isSingleLine = true
@@ -70,15 +70,15 @@ class StateButton(
                     val v = it.animatedValue as Float
                     background = DrawableUtil.rect(
                         color = ColorUtil.mixColors(
-                            color1 = Theme.color(Theme.color_bg2),
-                            color2 = Theme.color(Theme.color_positive),
+                            color1 = ThemeUtil.color(ThemeUtil.color_bg2),
+                            color2 = ThemeUtil.color(ThemeUtil.color_positive),
                             v
                         ),
                         corner = DrawableUtil.CORNER_MAX
                     )
                     setTextColor(
                         ColorUtil.mixColors(
-                            color1 = Theme.color(Theme.color_text2),
+                            color1 = ThemeUtil.color(ThemeUtil.color_text2),
                             color2 = Color.WHITE,
                             v
                         )
@@ -91,15 +91,15 @@ class StateButton(
             val v = available.asFloat
             background = DrawableUtil.rect(
                 color = ColorUtil.mixColors(
-                    color1 = Theme.color(Theme.color_bg2),
-                    color2 = Theme.color(Theme.color_positive),
+                    color1 = ThemeUtil.color(ThemeUtil.color_bg2),
+                    color2 = ThemeUtil.color(ThemeUtil.color_positive),
                     v
                 ),
                 corner = DrawableUtil.CORNER_MAX
             )
             setTextColor(
                 ColorUtil.mixColors(
-                    color1 = Theme.color(Theme.color_text2),
+                    color1 = ThemeUtil.color(ThemeUtil.color_text2),
                     color2 = Color.WHITE,
                     v
                 )

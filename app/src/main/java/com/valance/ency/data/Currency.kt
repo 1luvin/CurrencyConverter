@@ -72,15 +72,11 @@ enum class Currency(
     ),
     ;
 
-    val code: String get() = name
+    val code: String = name
 
-    val fullName: String get() = Resource.string(fullNameRes)
+    val fullName: String = Resource.string(fullNameRes)
 
-    val inputRegex: Regex
-        get() = when (this) {
-            in notFractional -> Regex("^[1-9][0-9]*$")
-            else -> Regex("(^[1-9][0-9]*[,.]?[0-9]{0,2}$)|(^[0]$)|(^[0][,.][0-9]{0,2}$)")
-        }
+    val inputRegex: Regex = Regex("(^[1-9][0-9]*[,.]?[0-9]{0,2}$)|(^[0]$)|(^[0][,.][0-9]{0,2}$)")
 
     var rateToUSD: Float = 1f
 
@@ -110,13 +106,8 @@ enum class Currency(
                     },
                     { /* ignore */ }
                 )
-                MainActivity.instance.requestQueue.add(request)
+                MainActivity.getInstance().requestQueue.add(request)
             }
         }
-
-        /**
-         * @return List of currencies that do not have a fractional part
-         */
-        val notFractional: List<Currency> get() = listOf(RUB, )
     }
 }

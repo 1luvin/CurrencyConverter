@@ -30,4 +30,12 @@
     <string name="state_WaitingForNetwork">Waiting for network</string>
     <string name="state_UpdatingRates">Updating rates</string>
     <string name="state_RatesUpdated">Rates updated</string>
+
+    <!--  Themes  -->
+
+    <string name="Theme">Theme</string>
+
+    <string name="theme_System">Follow system</string>
+    <string name="theme_Light">Light</string>
+    <string name="theme_Dark">Dark</string>
 </resources>

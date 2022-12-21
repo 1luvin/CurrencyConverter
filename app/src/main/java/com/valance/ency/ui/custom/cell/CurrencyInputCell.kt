@@ -5,6 +5,10 @@ import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.ColorStateList
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
 import android.text.*
 import android.text.method.DigitsKeyListener
 import android.view.Gravity
@@ -21,6 +25,7 @@ import com.valance.ency.extension.asFloat
 import com.valance.ency.extension.dp
 import com.valance.ency.extension.hideKeyboard
 import com.valance.ency.extension.showKeyboard
+import com.valance.ency.ui.main.MainActivity
 import com.valance.ency.util.*
 import com.valance.ency.util.Layout
 
@@ -54,10 +59,6 @@ class CurrencyInputCell(context: Context) : FrameLayout(context) {
     private val indentDp: Int = 20
     private val imageSizeDp: Int = 40
     private val dragSizeDp: Int = 30
-
-    private val colorBg: Int = Theme.color(Theme.color_bg)
-    private val colorBg2: Int = Theme.color(Theme.color_bg2)
-
     private val inputFilters = arrayOf(object : InputFilter {
         override fun filter(
             source: CharSequence,
@@ -98,7 +99,6 @@ class CurrencyInputCell(context: Context) : FrameLayout(context) {
         )
 
         textView = TextView(context).apply {
-            setTextColor(Theme.color(Theme.color_text))
             textSize = 20f
             typeface = Font.Medium
             isSingleLine = true
@@ -125,16 +125,10 @@ class CurrencyInputCell(context: Context) : FrameLayout(context) {
                 return super.onKeyPreIme(keyCode, event)
             }
         }.apply {
-            background = DrawableUtil.rect(
-                color = Theme.color(Theme.color_bg2),
-                corner = 10f.dp
-            )
             setPadding(10.dp, 0, 10.dp, 0)
 
-            setHintTextColor(Theme.color(Theme.color_text2))
             hint = "0"
 
-            setTextColor(Theme.color(Theme.color_text))
             textSize = 20f
             typeface = Font.Normal
             isSingleLine = true
@@ -173,6 +167,24 @@ class CurrencyInputCell(context: Context) : FrameLayout(context) {
                 0, 0, indentDp, 0
             )
         )
+
+        ThemeUtil.colors.observe(context as MainActivity) {
+            background = DrawableUtil.rect(
+                color = ThemeUtil.color(ThemeUtil.color_bg)
+            )
+
+            textView.setTextColor(ThemeUtil.color(ThemeUtil.color_text))
+
+            editText.apply {
+                background = DrawableUtil.rect(
+                    color = ThemeUtil.color(ThemeUtil.color_bg2),
+                    corner = 10f.dp
+                )
+
+                setHintTextColor(ThemeUtil.color(ThemeUtil.color_text2))
+                setTextColor(ThemeUtil.color(ThemeUtil.color_text))
+            }
+        }
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -247,12 +259,10 @@ class CurrencyInputCell(context: Context) : FrameLayout(context) {
 
     fun setAppearanceForState(state: Int, flag: Boolean) {
         if (state == ItemTouchHelper.ACTION_STATE_DRAG && flag && dragView == null) {
-            val d = Resource.drawable(R.drawable.drag).apply {
-                setTint(Theme.color(Theme.color_text2))
-            }
             dragView = ImageView(context).apply {
                 scaleType = ImageView.ScaleType.FIT_CENTER
-                setImageDrawable(d)
+                setImageResource(R.drawable.drag)
+                imageTintList = ColorStateList.valueOf(ThemeUtil.color(ThemeUtil.color_text2))
                 alpha = 0f
             }
             addView(
@@ -291,14 +301,18 @@ class CurrencyInputCell(context: Context) : FrameLayout(context) {
 
                 when (state) {
                     ItemTouchHelper.ACTION_STATE_DRAG -> {
-                        val c = ColorUtil.mixColors(colorBg, colorBg2, v)
+                        val c = ColorUtil.mixColors(
+                            ThemeUtil.color(ThemeUtil.color_bg),
+                            ThemeUtil.color(ThemeUtil.color_bg2),
+                            v
+                        )
                         setBackgroundColor(c)
                         editText.alpha = 1 - v
                         dragView?.alpha = v
                     }
                     ItemTouchHelper.ACTION_STATE_SWIPE -> {
                         background = DrawableUtil.rect(
-                            color = colorBg,
+                            color = ThemeUtil.color(ThemeUtil.color_bg),
                             corner = cornerRadius * v
                         )
                     }

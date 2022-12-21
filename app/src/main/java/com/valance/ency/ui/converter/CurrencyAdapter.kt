@@ -43,11 +43,7 @@ class CurrencyAdapter : RecyclerView.Adapter<CurrencyAdapter.ViewHolder>() {
                 this.currency = currency
                 if (values.isNotEmpty()) {
                     val value = values[adapterPosition]
-                    if (currency in Currency.notFractional) {
-                        setValue(createTriad("%.0f".format(value)))
-                    } else {
-                        setValue(createTriad("%.2f".format(value)))
-                    }
+                    setValue(createTriad("%.2f".format(value)))
                 } else {
                     setValue("")
                 }
@@ -100,6 +96,6 @@ class CurrencyAdapter : RecyclerView.Adapter<CurrencyAdapter.ViewHolder>() {
             Collections.swap(values, from, to)
         }
         notifyItemMoved(from, to)
-        UserConfig.setCurrencies(currencies)
+        UserConfig.currencies = currencies
     }
 }

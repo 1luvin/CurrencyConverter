@@ -23,4 +23,8 @@
     <string name="currency_ils">Израильский шекель</string>
     <string name="state_UpdatingRates">Обновление курсов</string>
     <string name="SelectCurrenciesHint">(2 или более)</string>
+    <string name="Theme">Тема</string>
+    <string name="theme_System">Как в системе</string>
+    <string name="theme_Light">Светлая</string>
+    <string name="theme_Dark">Темная</string>
 </resources>

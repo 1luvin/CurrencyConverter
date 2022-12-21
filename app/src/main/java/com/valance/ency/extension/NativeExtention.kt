@@ -3,7 +3,7 @@ package com.valance.ency.extension
 import com.valance.ency.ui.main.MainActivity
 import kotlin.math.roundToInt
 
-private val density: Float get() = MainActivity.instance.resources.displayMetrics.density
+private val density: Float get() = MainActivity.getInstance().resources.displayMetrics.density
 
 /*
     Int

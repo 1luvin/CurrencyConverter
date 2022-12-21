@@ -19,3 +19,7 @@
 ### Add more currencies
 
 <img src="README/add.jpg" title="" alt="" width="256">
+
+### Choose a theme
+
+<img src="README/theme.jpg" title="" alt="" width="256">

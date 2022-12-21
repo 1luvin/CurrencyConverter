@@ -3,16 +3,27 @@ package com.valance.ency.ui.custom.actionbar
 import android.animation.*
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.ColorStateList
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.drawable.Drawable
 import android.text.TextUtils
+import android.util.Log
 import android.view.Gravity
+import android.view.View
+import android.view.animation.DecelerateInterpolator
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.DrawableRes
 import androidx.core.view.updateLayoutParams
+import androidx.transition.ChangeBounds
 import com.valance.ency.R
 import com.valance.ency.extension.dp
 import com.valance.ency.extension.textSizeDp
 import com.valance.ency.ui.custom.view.AnimatingTextView
+import com.valance.ency.ui.main.MainActivity
 import com.valance.ency.util.*
 
 @SuppressLint("ViewConstructor")
@@ -20,16 +31,18 @@ class ActionBar(
     context: Context,
     title: String,
     private val subtitle: String? = null,
-    private val onBack: (() -> Unit)? = null,
+    private val onBack: (() -> Unit)? = null
 ) : FrameLayout(context) {
 
     private var imageView: ImageView? = null
     private val textView: TextView
     private var textView2: AnimatingTextView? = null
+    private var imageView2: ImageView? = null
 
     private val indentDp: Int = 20
     private val imageSizeDp: Int = 34
     private val imageTextIndentDp: Int = 15
+    private val imageSize2Dp: Int = 40
 
     private var state: State? = null
     private var dotAnimator: ValueAnimator? = null
@@ -37,18 +50,12 @@ class ActionBar(
 
     init {
         val indent = indentDp.dp
-        setPadding(indent, 0, indent, 0)
+        setPadding(indent, 0, 15.dp, 0)
 
         onBack?.let {
-            val d = Resource.drawable(R.drawable.back).apply {
-                setTint(Theme.color(Theme.color_text2))
-            }
             imageView = ImageView(context).apply {
                 scaleType = ImageView.ScaleType.CENTER
-                background = DrawableUtil.circle(
-                    color = Theme.color(Theme.color_bg2)
-                )
-                setImageDrawable(d)
+                setImageResource(R.drawable.back)
 
                 setOnClickListener {
                     it()
@@ -63,7 +70,6 @@ class ActionBar(
         }
 
         textView = TextView(context).apply {
-            setTextColor(Theme.color(Theme.color_text))
             textSizeDp = 30f
             typeface = Font.Bold
             isSingleLine = true
@@ -82,6 +88,19 @@ class ActionBar(
         subtitle?.let {
             createAddSubtitle()
         }
+
+        ThemeUtil.colors.observe(context as MainActivity) {
+            imageView?.apply {
+                background = DrawableUtil.circle(
+                    color = ThemeUtil.color(ThemeUtil.color_bg2)
+                )
+                imageTintList = ColorStateList.valueOf(ThemeUtil.color(ThemeUtil.color_text2))
+            }
+
+            textView.setTextColor(ThemeUtil.color(ThemeUtil.color_text))
+
+            imageView2?.imageTintList = ColorStateList.valueOf(ThemeUtil.color(ThemeUtil.color_text2))
+        }
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -95,7 +114,7 @@ class ActionBar(
         if (textView2 != null) return
 
         textView.updateLayoutParams<FrameLayout.LayoutParams> {
-            bottomMargin = 10.dp
+            bottomMargin = 13.dp
         }
 
         textView2 = AnimatingTextView(context).apply {
@@ -105,7 +124,7 @@ class ActionBar(
             ellipsize = TextUtils.TruncateAt.END
 
             subtitle?.let {
-                setTextColor(Theme.color(Theme.color_text2))
+                setTextColor(ThemeUtil.color(ThemeUtil.color_text2))
                 text = it
             }
         }
@@ -113,7 +132,7 @@ class ActionBar(
             textView2, Layout.ezFrame(
                 Layout.MATCH_PARENT, Layout.WRAP_CONTENT,
                 Gravity.CENTER_VERTICAL,
-                if (onBack != null) imageSizeDp + imageTextIndentDp else 0, 20, indentDp, 0
+                if (onBack != null) imageSizeDp + imageTextIndentDp else 0, 17, indentDp, 0
             )
         )
     }
@@ -162,16 +181,16 @@ class ActionBar(
 
         when (state) {
             State.WAITING_FOR_NETWORK -> {
-                textColor = Theme.color(Theme.color_negative)
+                textColor = ThemeUtil.color(ThemeUtil.color_negative)
                 text = Resource.string(R.string.state_WaitingForNetwork)
             }
             State.UPDATING_RATES -> {
-                textColor = Theme.color(Theme.color_neutral)
+                textColor = ThemeUtil.color(ThemeUtil.color_neutral)
                 text = Resource.string(R.string.state_UpdatingRates)
             }
             State.RATES_UPDATED -> {
                 cancelDotAnimator()
-                textColor = Theme.color(Theme.color_positive)
+                textColor = ThemeUtil.color(ThemeUtil.color_positive)
                 text = Resource.string(R.string.state_RatesUpdated)
             }
         }
@@ -189,7 +208,38 @@ class ActionBar(
             if (state != State.RATES_UPDATED) animateSubtitleLoading()
         }
 
+        imageView2?.isEnabled = state == State.RATES_UPDATED
+
         this.state = state
+    }
+
+    fun setActionButton(@DrawableRes iconRes: Int, onClick: () -> Unit) {
+        if (imageView2 == null) {
+            imageView2 = ImageView(context).apply {
+                scaleType = ImageView.ScaleType.FIT_CENTER
+                imageTintList = ColorStateList.valueOf(ThemeUtil.color(ThemeUtil.color_text2))
+            }
+            addView(
+                imageView2, Layout.ezFrame(
+                    imageSize2Dp, imageSize2Dp,
+                    Gravity.END or Gravity.CENTER_VERTICAL
+                )
+            )
+        }
+
+        imageView2?.apply {
+            setImageResource(iconRes)
+            setOnClickListener { onClick() }
+        }
+
+        val m = (imageTextIndentDp + imageSize2Dp).dp
+        textView.updateLayoutParams<FrameLayout.LayoutParams> {
+            rightMargin = m
+        }
+
+        textView2?.updateLayoutParams<FrameLayout.LayoutParams> {
+            rightMargin = m
+        }
     }
 
     enum class State {
