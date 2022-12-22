@@ -27,4 +27,5 @@
     <string name="theme_System">Как в системе</string>
     <string name="theme_Light">Светлая</string>
     <string name="theme_Dark">Темная</string>
+    <string name="currency_kzt">Казахстанский тенге</string>
 </resources>

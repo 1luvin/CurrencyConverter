@@ -87,6 +87,8 @@ class CurrencyInputCell(context: Context) : FrameLayout(context) {
     })
 
     init {
+        isFocusable = true
+
         imageView = ImageView(context).apply {
             scaleType = ImageView.ScaleType.FIT_CENTER
         }

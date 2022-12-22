@@ -66,6 +66,10 @@ enum class Currency(
         R.drawable.flag_uah,
         R.string.currency_uah
     ),
+    KZT(
+      R.drawable.flag_kzt,
+      R.string.currency_kzt
+    ),
     BYN(
         R.drawable.flag_byn,
         R.string.currency_byn
